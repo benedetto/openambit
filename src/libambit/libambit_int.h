@@ -45,6 +45,7 @@ enum ambit_commands_e {
     ambit_command_date                  = 0x0302,
     ambit_command_status                = 0x0306,
     ambit_command_personal_settings     = 0x0b00,
+    ambit_command_unknown2              = 0x0b02,
     ambit_command_unknown1              = 0x0b04,
     ambit_command_log_count             = 0x0b06,
     ambit_command_log_head_first        = 0x0b07,
@@ -129,6 +130,10 @@ int libambit_pmem20_log_parse_header(uint8_t *data, size_t datalen, ambit_log_he
 int libambit_pmem20_gps_orbit_write(libambit_pmem20_t *object, const uint8_t *data, size_t datalen, bool include_sha256_hash);
 
 // protocol.c
+/**
+ * Write command to device
+ * \param legacy_format 0=normal, 1=legacy, 2=version 2
+ */
 int libambit_protocol_command(ambit_object_t *object, uint16_t command, uint8_t *data, size_t datalen, uint8_t **reply_data, size_t *replylen, uint8_t legacy_format);
 void libambit_protocol_free(uint8_t *data);
 

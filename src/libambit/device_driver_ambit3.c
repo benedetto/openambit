@@ -372,10 +372,20 @@ static int parse_log_header(const uint8_t *data, ambit3_log_header_t *log_header
 
 static int get_memory_maps(ambit_object_t *object)
 {
-    uint8_t send_data[4] = { 0, 0, 0, 0 };
+    uint8_t *reply_data = NULL;
+    size_t replylen = 0;
+    uint8_t send_data[4];
     libambit_sbem0102_data_t reply_data_object;
     memory_map_entry_t *mm_entry;
     const uint8_t *ptr;
+
+    if (libambit_protocol_command(object, ambit_command_unknown2, NULL, 0, &reply_data, &replylen, 2) != 0 || replylen < 4) {
+        libambit_protocol_free(reply_data);
+        LOG_WARNING("Failed to read memory map key");
+        return -1;
+    }
+    memcpy(send_data, &reply_data[0], 4);
+    libambit_protocol_free(reply_data);
 
     libambit_sbem0102_data_init(&reply_data_object);
     if (libambit_sbem0102_command_request_raw(&object->driver_data->sbem0102, ambit_command_ambit3_memory_map, send_data, sizeof(send_data), &reply_data_object) != 0) {
