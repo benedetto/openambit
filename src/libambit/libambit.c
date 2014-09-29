@@ -116,7 +116,7 @@ ambit_object_t *libambit_detect(void)
             if (-1 == fd) error = errno;
             else close (fd);
 #endif
-            LOG_ERROR("Failed to open device \"%s\"", device->name);
+            LOG_ERROR("Failed to open device %04x:%04x", vendor_id, product_id);
             LOG_ERROR("Reason: %s", (error ? strerror(error) : "Unknown"));
         }
     }
